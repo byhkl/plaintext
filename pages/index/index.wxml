@@ -1,0 +1,171 @@
+<view class="container">
+  <!-- 提醒标题输入 -->
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__hd">
+      <view class="weui-label">提醒标题</view>
+    </view>
+    <view class="weui-cell__bd">
+      <input class="weui-input" bindinput="bindTitleInput" placeholder="请输入提醒标题" value="{{title}}"/>
+    </view>
+  </view>
+
+  <!-- 提醒备注输入 -->
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__hd">
+      <view class="weui-label">提醒备注</view>
+    </view>
+    <view class="weui-cell__bd">
+      <input class="weui-input" bindinput="bindRemarkInput" placeholder="请输入提醒备注" value="{{remark}}"/>
+    </view>
+  </view>
+
+  <!-- 提醒类型选择 -->
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__hd">
+      <view class="weui-label">提醒类型</view>
+    </view>
+    <view class="weui-cell__bd">
+      <picker mode="selector" range="{{['一次性提醒', '周期性提醒']}}" bindchange="bindReminderTypeChange" value="{{reminderType === 'once'? 0 : 1}}">
+        <view class="weui-input">{{reminderType === 'once'? '一次性提醒' : '周期性提醒'}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 一次性提醒设置 -->
+  <view wx:if="{{reminderType === 'once'}}">
+    <!-- 一次性提醒日期选择 -->
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">提醒日期</view>
+      </view>
+      <view class="weui-cell__bd">
+        <picker mode="date" start="{{startDate}}" end="{{endDate}}" bindchange="bindOnceDateChange" value="{{onceDate}}">
+          <view class="weui-input">{{onceDate || '请选择提醒日期'}}</view>
+        </picker>
+      </view>
+    </view>
+    <!-- 一次性提醒时间选择 -->
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">提醒时间</view>
+      </view>
+      <view class="weui-cell__bd">
+        <picker mode="time" bindchange="bindOnceTimeChange" value="{{onceTime}}">
+          <view class="weui-input">{{onceTime || '请选择提醒时间'}}</view>
+        </picker>
+      </view>
+    </view>
+  </view>
+
+  <!-- 周期性提醒设置 -->
+  <view wx:if="{{reminderType === 'periodic'}}">
+    <!-- 周期类型选择 -->
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">周期类型</view>
+      </view>
+      <view class="weui-cell__bd">
+        <picker mode="selector" range="{{periodTypes}}" bindchange="bindPeriodTypeChange" value="{{periodTypeIndex}}">
+          <view class="weui-input">{{periodTypes[periodTypeIndex]}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 每年提醒设置 -->
+    <view wx:if="{{periodTypes[periodTypeIndex] === '每年'}}">
+      <!-- 每年提醒月份选择 -->
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">每年提醒月份</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="selector" range="{{months}}" bindchange="bindPeriodicMonthChange" value="{{periodicMonthIndex}}">
+            <view class="weui-input">{{months[periodicMonthIndex] || '请选择提醒月份'}}</view>
+          </picker>
+        </view>
+      </view>
+      <!-- 每年提醒日期选择 -->
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">每年提醒日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="selector" range="{{periodicDays}}" bindchange="bindPeriodicDayChange" value="{{periodicDayIndex}}">
+            <view class="weui-input">{{periodicDays[periodicDayIndex] || '请选择提醒日期'}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <!-- 每月提醒设置 -->
+    <view wx:if="{{periodTypes[periodTypeIndex] === '每月'}}">
+      <!-- 每月提醒日期选择 -->
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">每月提醒日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="selector" range="{{periodicDays}}" bindchange="bindPeriodicDayChange" value="{{periodicDayIndex}}">
+            <view class="weui-input">{{periodicDays[periodicDayIndex] || '请选择提醒日期'}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <!-- 每周提醒设置 -->
+    <view wx:if="{{periodTypes[periodTypeIndex] === '每周'}}">
+      <!-- 每周提醒日期选择 -->
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">每周提醒日期</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="selector" range="{{weeks}}" bindchange="bindPeriodicWeekChange" value="{{periodicWeekIndex}}">
+            <view class="weui-input">{{weeks[periodicWeekIndex] || '请选择提醒日期'}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <!-- 周期性提醒时间选择 -->
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">提醒时间</view>
+      </view>
+      <view class="weui-cell__bd">
+        <picker mode="time" bindchange="bindPeriodicTimeChange" value="{{periodicTime}}">
+          <view class="weui-input">{{periodicTime || '请选择提醒时间'}}</view>
+        </picker>
+      </view>
+    </view>
+    <!-- 根据不同周期类型展示完整信息 -->
+    <view wx:if="{{periodTypes[periodTypeIndex] === '每年'}}" class="weui-cell">
+      <view class="weui-cell__bd">
+        每年 {{months[periodicMonthIndex]}} 月 {{periodicDays[periodicDayIndex]}} 日 {{periodicTime}}将收到提醒。
+      </view>
+    </view>
+    <view wx:if="{{periodTypes[periodTypeIndex] === '每月'}}" class="weui-cell">
+      <view class="weui-cell__bd">
+        每月 {{periodicDays[periodicDayIndex]}} 日 {{periodicTime}}将收到提醒。
+      </view>
+    </view>
+    <view wx:if="{{periodTypes[periodTypeIndex] === '每周'}}" class="weui-cell">
+      <view class="weui-cell__bd">
+        每周 {{weeks[periodicWeekIndex]}} {{periodicTime}}将收到提醒。
+      </view>
+    </view>
+    <view wx:if="{{periodTypes[periodTypeIndex] === '每天'}}" class="weui-cell">
+      <view class="weui-cell__bd">
+        每天{{periodicTime}}将收到提醒。
+      </view>
+    </view>
+  </view>
+
+  <!-- 授权和提交按钮 -->
+  <view wx:if="{{!hasUserAuthorized}}" class="weui-btn-area">
+    <button class="weui-btn weui-btn_primary" bindtap="requestAuthorization">授权服务通知</button>
+  </view>
+  <view class="weui-btn-area">
+    <button class="weui-btn weui-btn_primary" bindtap="submitReminder">提交提醒</button>
+  </view>
+</view>

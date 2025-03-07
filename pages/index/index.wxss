@@ -1,0 +1,7 @@
+.container {
+  padding: 20px;
+}
+
+.weui-cell {
+  margin-bottom: 5px;
+}
